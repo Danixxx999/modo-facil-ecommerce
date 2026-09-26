@@ -1,0 +1,40 @@
+name: Bootstrap repository
+
+on:
+  push:
+    paths:
+      - '.bootstrap/READY'
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct project archive
+        shell: bash
+        run: |
+          cat .bootstrap/part_*.b64 | base64 --decode > /tmp/project.zip
+          rm -rf /tmp/project
+          mkdir -p /tmp/project
+          unzip -q /tmp/project.zip -d /tmp/project
+
+      - name: Publish source tree
+        shell: bash
+        run: |
+          shopt -s dotglob
+          rm -rf apps docs ROADMAP.md SECURITY.md package.json package-lock.json .env.example .gitignore .nvmrc
+          cp -a /tmp/project/. .
+          rm -rf .bootstrap
+          rm -f .github/workflows/bootstrap.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "feat: publish full e-commerce application"
+          git push origin HEAD:main
