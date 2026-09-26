@@ -34,7 +34,7 @@ import TopBar from "@/components/TopBar.jsx";
 import Header from "@/components/Header.jsx";
 import Footer from "@/components/Footer.jsx";
 import { Button } from "@/components/ui/button.jsx";
-import { useSettings } from "@/hooks/useSettings.js";
+import { useSettings } from "@/hooks/useStoreSettings.js";
 
 const normalizePhone = (value) => {
   return String(value || "").replace(/[^\d]/g, "");
