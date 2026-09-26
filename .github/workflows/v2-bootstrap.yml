@@ -1,0 +1,39 @@
+name: Publish V2 source
+on:
+  push:
+    branches: [v2/postgres-commerce]
+    paths:
+      - '.bootstrap/manifest.txt'
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify complete source archive
+        shell: bash
+        run: |
+          cat .bootstrap/part_* | base64 --decode > /tmp/modo-facil-v2.tar.xz
+          echo "19fc96d45f04821f81cdd194712d3801829cd1e79fecdda72678a795e1cad93e  /tmp/modo-facil-v2.tar.xz" | sha256sum -c -
+      - name: Replace V1 tree on the V2 branch only
+        shell: bash
+        run: |
+          find . -mindepth 1 -maxdepth 1 ! -name .git ! -name .bootstrap -exec rm -rf {} +
+          tar -xJf /tmp/modo-facil-v2.tar.xz -C .
+          rm -rf .bootstrap
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Create reproducible npm lockfile
+        run: npm install --package-lock-only --ignore-scripts
+      - name: Commit V2 source and lockfile
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "feat(v2): replace PocketBase with full PostgreSQL commerce platform"
+          git push origin HEAD:v2/postgres-commerce
