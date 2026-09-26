@@ -1,0 +1,11 @@
+{
+  "name": "modo-facil-pocketbase",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "./pocketbase serve --http=0.0.0.0:8090 --encryptionEnv=PB_ENCRYPTION_KEY --migrationsDir=./pb_migrations --hooksWatch=false",
+    "start": "./pocketbase serve --http=0.0.0.0:8090 --encryptionEnv=PB_ENCRYPTION_KEY --migrationsDir=./pb_migrations --hooksWatch=false",
+    "migrations:up": "./pocketbase migrate up --encryptionEnv=PB_ENCRYPTION_KEY --migrationsDir=./pb_migrations"
+  }
+}
