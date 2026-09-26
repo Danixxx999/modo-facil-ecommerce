@@ -1,0 +1,23 @@
+{
+  "name": "modo-facil-ecommerce",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "setup": "npm install",
+    "dev": "concurrently --kill-others --raw \"npm run dev --prefix apps/web\" \"npm run dev --prefix apps/pocketbase\"",
+    "build": "npm run build --prefix apps/web",
+    "lint": "npm run lint --prefix apps/web",
+    "check": "npm run lint && npm run build",
+    "pb:migrate": "npm run migrations:up --prefix apps/pocketbase"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.4"
+  },
+  "workspaces": [
+    "apps/*"
+  ],
+  "description": "Full-stack e-commerce storefront and admin dashboard built with React, Vite, Tailwind CSS and PocketBase.",
+  "engines": {
+    "node": ">=22"
+  }
+}
