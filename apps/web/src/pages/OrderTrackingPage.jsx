@@ -36,7 +36,7 @@ import TopBar from "@/components/TopBar.jsx";
 import Header from "@/components/Header.jsx";
 import Footer from "@/components/Footer.jsx";
 import { useOrder } from "@/hooks/useOrders.js";
-import { useSettings } from "@/hooks/useSettings.js";
+import { useSettings } from "@/hooks/useStoreSettings.js";
 
 const formatCurrency = (value) => {
   return Number(value || 0).toLocaleString("es-CO", {
