@@ -1,0 +1,38 @@
+name: Restore PocketBase schema
+
+on:
+  push:
+    paths:
+      - '.bootstrap/db_patch.b64'
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify and extract schema patch
+        shell: bash
+        run: |
+          mkdir -p /tmp/modo-facil-db-patch
+          base64 --decode .bootstrap/db_patch.b64 > /tmp/db_patch.tar.xz
+          echo "fa92132976198a57bdc335cf30458aa99eafd7b7814fa82791f8e9e5f93357af  /tmp/db_patch.tar.xz" | sha256sum -c -
+          tar -xJf /tmp/db_patch.tar.xz -C /tmp/modo-facil-db-patch
+          cp -a /tmp/modo-facil-db-patch/. .
+          rm -rf .bootstrap
+          rm -f .github/workflows/restore-pocketbase-schema.yml
+
+      - name: Commit restored schema
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "fix: restore complete PocketBase schema history"
+          git push origin HEAD:main
