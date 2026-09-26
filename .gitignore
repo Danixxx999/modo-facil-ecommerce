@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Builds
+dist/
+coverage/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+!apps/web/.env.example
+
+# PocketBase runtime data and local binary
+apps/pocketbase/pb_data/
+apps/pocketbase/pb_backups/
+apps/pocketbase/pocketbase
+apps/pocketbase/pocketbase.exe
+
+# Logs and local tooling
+*.log
+.npm/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
