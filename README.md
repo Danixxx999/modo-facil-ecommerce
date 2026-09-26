@@ -1,6 +1,10 @@
 # Modo Fácil — Full-stack E-commerce
 
-Modo Fácil is a full-stack e-commerce project focused on a simple Colombian shopping flow: product discovery, cart, checkout, WhatsApp-assisted order confirmation and a protected administration panel. The codebase was refactored from an earlier prototype to make the repository safer, easier to run locally and more suitable for a professional portfolio.
+[![CI](https://github.com/Danixxx999/modo-facil-ecommerce/actions/workflows/ci.yml/badge.svg)](https://github.com/Danixxx999/modo-facil-ecommerce/actions/workflows/ci.yml)
+
+Modo Fácil is a full-stack e-commerce project focused on a simple Colombian shopping flow: product discovery, cart, checkout, WhatsApp-assisted order confirmation and a protected administration panel.
+
+The project started as an earlier prototype and has been refactored into a safer, cleaner and more teachable codebase suitable for portfolio review, classroom demonstrations and continued engineering work.
 
 ## Highlights
 
@@ -9,11 +13,11 @@ Modo Fácil is a full-stack e-commerce project focused on a simple Colombian sho
 - Checkout with prepaid and cash-on-delivery payment options.
 - **Free shipping for every payment method**; no logistics surcharge is added to the order total.
 - WhatsApp-assisted order confirmation and customer support flows.
-- Order-tracking interface retained from the current product; the public lookup backend is listed for security hardening in the roadmap.
 - Protected admin area for catalog, orders, customers, reports and store settings.
-- PocketBase migrations for the application data model.
-- CI workflow for linting and production builds.
-- Sensitive PocketBase runtime data and local credentials are excluded from Git.
+- PocketBase migrations for a reproducible application data model.
+- Environment-based bootstrap credentials instead of hard-coded admin passwords.
+- CI workflow that installs dependencies, runs ESLint and creates a production build.
+- Sensitive runtime database files, backups, binaries and local environment files are excluded from Git.
 
 ## Tech stack
 
@@ -21,7 +25,7 @@ Modo Fácil is a full-stack e-commerce project focused on a simple Colombian sho
 
 **Backend / data:** PocketBase with JavaScript migrations.
 
-**Tooling:** npm workspaces, ESLint and GitHub Actions.
+**Engineering:** npm workspaces, ESLint and GitHub Actions.
 
 ## Repository structure
 
@@ -39,9 +43,14 @@ Modo Fácil is a full-stack e-commerce project focused on a simple Colombian sho
 │   └── pocketbase/
 │       ├── pb_migrations/
 │       └── .pocketbase-version
-├── docs/ARCHITECTURE.md
+├── docs/
+│   ├── ARCHITECTURE.md
+│   ├── DATA_LAYER.md
+│   └── TEACHING_GUIDE.md
 ├── .github/workflows/ci.yml
-└── package.json
+├── CONTRIBUTING.md
+├── ROADMAP.md
+└── SECURITY.md
 ```
 
 ## Local development
@@ -55,7 +64,7 @@ Modo Fácil is a full-stack e-commerce project focused on a simple Colombian sho
 ### 1. Install JavaScript dependencies
 
 ```bash
-npm ci
+npm install
 ```
 
 ### 2. Install PocketBase locally
@@ -66,27 +75,27 @@ Download the PocketBase binary that matches the version in `apps/pocketbase/.poc
 apps/pocketbase/pocketbase
 ```
 
-On macOS/Linux, make it executable:
+On macOS/Linux:
 
 ```bash
 chmod +x apps/pocketbase/pocketbase
 ```
 
-### 3. Configure the backend environment
+### 3. Configure the backend
 
-Use `.env.example` as a reference and export the required variables in your shell before starting PocketBase. Do not commit real passwords or encryption keys.
+Use `.env.example` as a reference and export the required variables in your shell before starting PocketBase.
 
-At minimum, set a strong `PB_ENCRYPTION_KEY`. The optional bootstrap variables can create the first PocketBase superuser and the first storefront administrator when migrations run.
+At minimum, set a strong `PB_ENCRYPTION_KEY`. Optional bootstrap variables can create the first PocketBase superuser and storefront administrator when migrations run.
 
-### 4. Configure the web app
+Never commit real credentials.
 
-Copy the frontend example environment file:
+### 4. Configure the frontend
 
 ```bash
 cp apps/web/.env.example apps/web/.env
 ```
 
-For local development it points to `http://127.0.0.1:8090`.
+The local default points to PocketBase at `http://127.0.0.1:8090`.
 
 ### 5. Start the project
 
@@ -103,25 +112,34 @@ npm run dev
 npm run check
 ```
 
-This runs ESLint and the production Vite build.
+The same lint/build checks run in GitHub Actions on pushes and pull requests to `main`.
 
-## Security notes
+## Documentation
 
-The repository intentionally excludes `pb_data`, PocketBase backups, local binaries and `.env` files. See [SECURITY.md](SECURITY.md) for additional guidance.
+- [Architecture](docs/ARCHITECTURE.md)
+- [Data-layer strategy](docs/DATA_LAYER.md)
+- [Teaching guide](docs/TEACHING_GUIDE.md)
+- [Engineering roadmap](ROADMAP.md)
+- [Security guidance](SECURITY.md)
+- [Contribution workflow](CONTRIBUTING.md)
 
-## Architecture
+## Data-layer direction
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the application boundaries and data flow.
+PocketBase is intentionally retained for **v1** because it keeps the project self-contained, transparent and easy to teach.
 
-## Roadmap
+A future **v2** can migrate persistence to PostgreSQL behind a dedicated backend API when the project needs stronger transactional workflows, reporting, integrations or scale. The migration is treated as an architectural evolution, not as a cosmetic technology swap.
 
-The next refactor focuses on PocketBase data rules, secure order tracking, tests and deployment. See [ROADMAP.md](ROADMAP.md).
+## Security
+
+The repository intentionally excludes `pb_data`, PocketBase backups, local binaries and `.env` files. Production/customer data must never be committed.
+
+The order-tracking flow is scheduled for additional server-side hardening before production use; see [ROADMAP.md](ROADMAP.md).
 
 ## Author
 
-**Daniel Felipe Olaya Hermosa**
-Full-Stack Developer · Product Builder · E-commerce & Digital Growth
+**Daniel Felipe Olaya Hermosa**  
+Systems Engineer · Full-Stack Developer · Product Builder · E-commerce & Digital Growth
 
 ---
 
-This repository is published as a portfolio project. No open-source license is granted unless a license file is added explicitly.
+This repository is published as a portfolio and educational project. No open-source license is granted unless a license file is added explicitly.
